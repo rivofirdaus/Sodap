@@ -24,7 +24,7 @@ class Cpanel_model extends CI_Model
     $this->db->trans_complete();
     return ($this->db->affected_rows()!=1)?false:true;
 
-  }
+  } 
   function adddaftunit(){
     $json_string = 'http://192.168.10.5:8080/daftunit/22384ee59631a5a61ce3386af63c094b/2018';
 		$jsondata = file_get_contents($json_string);
