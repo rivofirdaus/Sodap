@@ -9,6 +9,7 @@ class Cpanel extends MX_Controller {
 
 		 $this->load->model(array('Cpanel_model'));
 
+
 	}
 	public function index()
 	{
