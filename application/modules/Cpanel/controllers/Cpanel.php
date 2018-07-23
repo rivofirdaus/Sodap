@@ -8,8 +8,6 @@ class Cpanel extends MX_Controller {
 		parent::__construct();
 
 		 $this->load->model(array('Cpanel_model'));
-
-
 	}
 	public function index()
 	{
