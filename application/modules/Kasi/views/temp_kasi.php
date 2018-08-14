@@ -86,14 +86,38 @@
                     <li>
                         <a data-toggle="collapse" href="#pagesExamples">
                             <i class="material-icons">content_paste</i>
-                            <p>FORMS
+                            <p>FORM
                                 <b class="caret"></b>
                             </p>
                         </a>
                         <div class="collapse" id="pagesExamples">
                             <ul class="nav">
                                 <li>
-                                    <a href="<?php echo base_url('Kasi/entri'); ?>">ENTRI PPTK</a>
+                                    <a href="<?php echo base_url('Kasi/list1'); ?>">Generate PPTK</a>
+                                </li>
+                                
+                            </ul>	
+							<ul class="nav">
+                                <li>
+                                    <a href="<?php echo base_url('Kasi/list2'); ?>">Generate PPTK2</a>
+                                </li>
+                                
+                            </ul>	
+                        </div>
+
+						<div class="collapse" id="pagesExamples">
+                            <ul class="nav">
+                                <li>
+                                    <a href="<?php echo base_url('Kasi'); ?>">Cek Target Keuangan</a>
+                                </li>
+                                
+                            </ul>	
+							
+                        </div>
+						<div class="collapse" id="pagesExamples">
+                            <ul class="nav">
+                                <li>
+                                    <a href="<?php echo base_url('Kasi'); ?>">Target Fisik</a>
                                 </li>
                                 
                             </ul>	
@@ -101,22 +125,6 @@
                         </div>
                     </li>
 					
-					 <li>
-                        <a data-toggle="collapse" href="#tablesExamples">
-                            <i class="material-icons">grid_on</i>
-                            <p>Tables
-                                <b class="caret"></b>
-                            </p>
-                        </a>
-                        <div class="collapse" id="tablesExamples">
-                            <ul class="nav">
-                                <li>
-                                    <a href="<?php echo base_url('Kasi/list1'); ?>">LIST</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-					 
                     
                 </ul>
             </div>
@@ -242,13 +250,113 @@
 <!-- Material Dashboard DEMO methods, don't include it in your project! -->
 <script src="<?php echo base_url('assets/js/demo.js') ?>"></script>
 <script type="text/javascript">
-    //$(document).ready(function() {
 
-        // Javascript method's body can be found in assets/js/demos.js
-        //demo.initDashboardPageCharts();
+  $(document).ready(function () {
+        $.fn.dataTableExt.oApi.fnPagingInfo = function (oSettings) {
+            return {
+                "iStart": oSettings._iDisplayStart,
+                "iEnd": oSettings.fnDisplayEnd(),
+                "iLength": oSettings._iDisplayLength,
+                "iTotal": oSettings.fnRecordsTotal(),
+                "iFilteredTotal": oSettings.fnRecordsDisplay(),
+                "iPage": Math.ceil(oSettings._iDisplayStart / oSettings._iDisplayLength),
+                "iTotalPages": Math.ceil(oSettings.fnRecordsDisplay() / oSettings._iDisplayLength)
+            };
+        };
+        var t = $("#tablekasi").DataTable({
+            initComplete: function () {
+                var api = this.api();
+                $('#tablekasi_filter input')
+                    .off('.DT')
+                    .on('keyup.DT', function (e) {
+                        if (e.keyCode == 13) {
+                            api.search(this.value).draw();
+                        }
+                    });
+            },
+            "oLanguage": {
+                "sProcessing": "loading..."
+            },
+            "processing": true,
+            "serverSide": true,
+            "ajax": {"url": "Kasi/json_view_kasi", "type": "POST"},
 
-        //demo.initVectorMap();
-    //});
+            "columnDefs": [
+                {
+                    "data": "idpptk",
+                },
+                
+                {
+                    "data": "nmkgeunit",
+                },
+
+                {
+                    "data": "nilai",
+                },
+                {
+                    /*"data": "pelaksana",*/
+                    "render": function (data, type, row) {
+
+                        return row[3] == (null) ? '<div style="color: #f98022"><i>perlu konfirmasi ulang</i></div>' : row[3]
+                    },
+                    "targets": 3
+
+                },
+				
+            ],
+
+            //rowsGroup: [0], //ini untuk colspan atau grouping
+            "order": [[1, 'asc']], //ini order berdasrkan index pertama
+
+            //ini untuk menambahkan kolom no di index 0
+            rowCallback: function (row, data, iDisplayIndex) {
+                var info = this.fnPagingInfo();
+                var page = info.iPage;
+                var length = info.iLength;
+                var index = page * length + (iDisplayIndex + 1);
+                $('td:eq(0)', row).html(index);
+            },
+
+        });
+
+        var t = $("#tablelaporkasi").DataTable({
+            initComplete: function () {
+                var api = this.api();
+                $('#tablekasi_filter input')
+                    .off('.DT')
+                    .on('keyup.DT', function (e) {
+                        if (e.keyCode == 13) {
+                            api.search(this.value).draw();
+                        }
+                    });
+            },
+            "oLanguage": {
+                "sProcessing": "loading..."
+            },
+            "processing": true,
+            "serverSide": true,
+            "ajax": {"url": "Kasi/json_view_laporan", "type": "POST"},
+
+            "columnDefs": [],
+
+            //rowsGroup: [0], //ini untuk colspan atau grouping
+            "order": [[1, 'asc']], //ini order berdasrkan index pertama
+
+            //ini untuk menambahkan kolom no di index 0
+            rowCallback: function (row, data, iDisplayIndex) {
+                var info = this.fnPagingInfo();
+                var page = info.iPage;
+                var length = info.iLength;
+                var index = page * length + (iDisplayIndex + 1);
+                $('td:eq(0)', row).html(index);
+            },
+
+        });
+
+    });      
+
+	
+	
 </script>
 
 
